@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<a href="https://www.htl-donaustadt.chat">
+  <img alt="Next.js 13 and app template Router-ready AI chatbot." src="https://www.htl-donaustadt.chat/og.png">
+  <h1 align="center">HTL Donaustadt AI Chatbot</h1>
+</a>
 
-## Getting Started
+<p align="center">
+  Ein AI Chatbot für die HTL Donaustadt. 
+</p>
 
-First, run the development server:
+<p align="center">
+  <a href="#features"><strong>Features</strong></a> ·
+  <a href="#technologien"><strong>Technologien</strong></a> ·
+  <a href="#autoren"><strong>Autoren & Inspiration</strong></a>
+</p>
+<br/>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Stark inspiriert von [Vercel AI Chatbot](https://github.com/vercel-labs/ai-chatbot)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologien
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [**GPT 3.5-Turbo (AI) 🤖:**](https://platform.openai.com/docs/models/gpt-3-5) Eine fortschrittliche KI-Technologie von OpenAI, die für leistungsstarke Sprachverarbeitungsfähigkeiten sorgt.
+- [**NextJS 14 (Frontend) ⭐️:**](https://nextjs.org/) Ein populäres Frontend-Framework, das für seine Effizienz und schnelle Leistung bekannt ist.
+- [**Vercel AI SDK (Middleware)⚡️:**](https://sdk.vercel.ai/docs) Ein Software-Development-Kit, das speziell für die Integration von KI-Funktionen in Webanwendungen entwickelt wurde.
+- [**LangchainJS (Middleware) 🦜:**](https://js.langchain.com/docs/get_started/introduction) Eine Bibliothek, die für die nahtlose Integration von Sprach-KI in JavaScript-Anwendungen sorgt.
+- [**Pinecone (Vektordatenbank) 🌲:**](https://www.pinecone.io/) Eine spezialisierte Vektordatenbank, die für die effiziente Verarbeitung und Speicherung von Vektordaten konzipiert ist.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Autoren
 
-## Learn More
+Dieses Projekt ist stark von [Vercel AI Chatbot](https://github.com/vercel-labs/ai-chatbot) stark inspiriert.
 
-To learn more about Next.js, take a look at the following resources:
+Sonstige Autoren:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Julian S. ([@julian-at](https://github.com/Julian-AT)

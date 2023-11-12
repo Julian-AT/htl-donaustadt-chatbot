@@ -30,4 +30,4 @@ Dieses Projekt ist stark von [Vercel AI Chatbot](https://github.com/vercel-labs/
 
 Sonstige Autoren:
 
-- Julian S. ([@julian-at](https://github.com/Julian-AT)
+- Julian S. ([@julian-at](https://github.com/Julian-AT))

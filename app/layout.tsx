@@ -9,7 +9,7 @@ import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { Providers } from '@/components/providers'
 import { Header } from '@/components/header'
 import { siteConfig } from '@/config/config'
-import { ThemeToggle } from '@/components/theme-toggle'
+import { Analytics } from '@vercel/analytics/react'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -89,6 +89,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           </div>
           <TailwindIndicator />
         </Providers>
+        <Analytics />
       </body>
     </html>
   )

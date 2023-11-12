@@ -44,7 +44,7 @@ export async function Header({
           )
         })}
       </div>
-      <ThemeToggle suppressHydrationWarning />
+      <ThemeToggle />
     </header>
   )
 }

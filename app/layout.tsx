@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   authors: [
     {
       name: 'julian-at',
-      url: 'https://github.com/julian-at'
+      url: 'https://github.com/julian-at/'
     }
   ],
   openGraph: {

@@ -1,5 +1,4 @@
 import { Message as VercelChatMessage, StreamingTextResponse } from 'ai'
-import { pinecone } from '@/lib/pinecone-client'
 import { NextResponse } from 'next/server'
 import { PineconeStore } from 'langchain/vectorstores/pinecone'
 import { ConversationalRetrievalQAChain } from 'langchain/chains'
@@ -13,9 +12,14 @@ import {
   SystemMessagePromptTemplate
 } from 'langchain/prompts'
 import { StringOutputParser } from 'langchain/schema/output_parser'
+import { Pinecone } from '@pinecone-database/pinecone'
 
 const formatMessage = (message: VercelChatMessage) => {
   return `${message.role}: ${message.content}`
+}
+
+if (!process.env.PINECONE_ENVIRONMENT || !process.env.PINECONE_API_KEY) {
+  throw new Error('Pinecone environment or api key vars missing')
 }
 
 const TEMPLATE = `Du bist ein hilfreicher Chatbot der Fragen über die HTL Donaustadt aus sicht der Schule beantwortet.
@@ -59,6 +63,11 @@ export async function POST(req: Request) {
       modelName: 'gpt-3.5-turbo',
       streaming: true,
       maxTokens: 3000
+    })
+
+    const pinecone = new Pinecone({
+      environment: process.env.PINECONE_ENVIRONMENT ?? '',
+      apiKey: process.env.PINECONE_API_KEY ?? ''
     })
 
     /* Get pinecone index */
@@ -105,13 +114,10 @@ export async function POST(req: Request) {
       new StringOutputParser()
     ])
 
-
     const stream = await chain.stream({
       question: currentMessageContent,
       chatHistory: formattedPreviousMessages.join('\n')
     })
-
-    
 
     return new StreamingTextResponse(stream)
   } catch (e: any) {

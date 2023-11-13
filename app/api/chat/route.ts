@@ -22,6 +22,8 @@ if (!process.env.PINECONE_ENVIRONMENT || !process.env.PINECONE_API_KEY) {
   throw new Error('Pinecone environment or api key vars missing')
 }
 
+export const runtime = 'edge'
+
 const TEMPLATE = `Du bist ein hilfreicher Chatbot der Fragen über die HTL Donaustadt aus sicht der Schule beantwortet.
 Du bekommst eine Wissenbasis über die Schule und kannst Fragen beantworten.
 

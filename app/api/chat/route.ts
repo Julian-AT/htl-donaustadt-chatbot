@@ -10,8 +10,6 @@ import {
 import { StringOutputParser } from 'langchain/schema/output_parser'
 import { Pinecone } from '@pinecone-database/pinecone'
 
-export const runtime = "edge"
-
 const formatMessage = (message: VercelChatMessage) => {
   return `${message.role}: ${message.content}`
 }
@@ -116,7 +114,7 @@ export async function POST(req: Request) {
       chatHistory: formattedPreviousMessages.join('\n')
     })
 
-    return new StreamingTextResponse(stream)
+    return new  StreamingTextResponse(stream)
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 })
   }

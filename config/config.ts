@@ -4,7 +4,7 @@ import { SiteConfig } from 'types'
 export const siteConfig: SiteConfig = {
   name: 'HTL Donaustadt - AI Chatbot',
   description: 'AI Chatbot für die HTL Donaustadt',
-  url: 'https://www.htl-donaustadt.chat/',
+  url: 'https://www.htl-donaustadt.chat',
   links: [
     {
       name: 'HTL Donaustadt',

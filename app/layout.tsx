@@ -11,7 +11,7 @@ import { Header } from '@/components/header'
 import { siteConfig } from '@/config/config'
 import { Analytics } from '@vercel/analytics/react'
 
-export const runtime = 'edge' // 'nodejs' (default) | 'edge'
+export const runtime = 'edge' 
 
 export const viewport: Viewport = {
   width: 'device-width',

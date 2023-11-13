@@ -1,15 +1,11 @@
-import { Message as VercelChatMessage, StreamingTextResponse } from 'ai'
+import { Message as VercelChatMessage, StreamingTextResponse, OpenAIStream } from 'ai'
 import { NextResponse } from 'next/server'
 import { PineconeStore } from 'langchain/vectorstores/pinecone'
-import { ConversationalRetrievalQAChain } from 'langchain/chains'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { RunnableSequence } from 'langchain/schema/runnable'
 import {
-  ChatPromptTemplate,
-  HumanMessagePromptTemplate,
   PromptTemplate,
-  SystemMessagePromptTemplate
 } from 'langchain/prompts'
 import { StringOutputParser } from 'langchain/schema/output_parser'
 import { Pinecone } from '@pinecone-database/pinecone'
@@ -21,8 +17,6 @@ const formatMessage = (message: VercelChatMessage) => {
 if (!process.env.PINECONE_ENVIRONMENT || !process.env.PINECONE_API_KEY) {
   throw new Error('Pinecone environment or api key vars missing')
 }
-
-export const runtime = 'edge' 
 
 const TEMPLATE = `Du bist ein hilfreicher Chatbot der Fragen über die HTL Donaustadt aus sicht der Schule beantwortet.
 Du bekommst eine Wissenbasis über die Schule und kannst Fragen beantworten.
@@ -61,7 +55,7 @@ export async function POST(req: Request) {
     const currentMessageContent = messages[messages.length - 1].content
 
     const model = new ChatOpenAI({
-      temperature: 0.75,
+      temperature: 0.8,
       modelName: 'gpt-3.5-turbo',
       streaming: true,
       maxTokens: 3000

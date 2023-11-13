@@ -91,7 +91,6 @@ export async function POST(req: Request) {
         question: (input: { question: string; chatHistory?: string }) =>
           input.question,
         chatHistory: (input: { question: string; chatHistory?: string }) => {
-          console.log(input.chatHistory)
           input.chatHistory ?? ''
         },
         context: async (input: { question: string; chatHistory?: string }) => {
@@ -117,19 +116,8 @@ export async function POST(req: Request) {
       chatHistory: formattedPreviousMessages.join('\n')
     })
 
-    const decoder = new TextDecoder();
-    const encoder = new TextEncoder();
-
-    const transformStream = new TransformStream({
-      transform(chunk, controller) {
-        const text = decoder.decode(chunk);
-        controller.enqueue(encoder.encode(text));
-      },
-    });
-    
-    return new StreamingTextResponse(stream.pipeThrough(transformStream))
+    return new StreamingTextResponse(stream)
   } catch (e: any) {
-    console.log(e)
     return NextResponse.json({ error: e.message }, { status: 500 })
   }
 }

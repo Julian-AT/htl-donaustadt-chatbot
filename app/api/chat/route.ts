@@ -11,6 +11,8 @@ import { StringOutputParser } from 'langchain/schema/output_parser'
 import { Pinecone } from '@pinecone-database/pinecone'
 import { Readable, Transform } from 'stream'
 
+export const runtime = 'edge'
+
 const formatMessage = (message: VercelChatMessage) => {
   return `${message.role}: ${message.content}`
 }

@@ -11,7 +11,7 @@ import { Header } from '@/components/header'
 import { siteConfig } from '@/config/config'
 import { Analytics } from '@vercel/analytics/react'
 
-export const viewport: Viewport = {
+  export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   minimumScale: 1,

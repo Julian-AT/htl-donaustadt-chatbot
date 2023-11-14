@@ -9,6 +9,7 @@ import {
 } from 'langchain/prompts'
 import { StringOutputParser } from 'langchain/schema/output_parser'
 import { Pinecone } from '@pinecone-database/pinecone'
+import { Readable, Transform } from 'stream'
 
 const formatMessage = (message: VercelChatMessage) => {
   return `${message.role}: ${message.content}`
@@ -114,7 +115,28 @@ export async function POST(req: Request) {
       chatHistory: formattedPreviousMessages.join('\n')
     })
 
-    return new  StreamingTextResponse(stream)
+    const encoder = new TextEncoder()
+    const tes = {
+      start() {
+      },
+      transform(chunk: string, controller: any) {
+        controller.enqueue(encoder.encode(chunk));
+      },
+    };
+
+    let _jstes_wm = new WeakMap(); /* info holder */
+  class JSTextEncoderStream extends TransformStream {
+    constructor() {
+      let t = { ...tes };
+      super(t);
+      _jstes_wm.set(this, t);
+    }
+    get encoding() {
+      return _jstes_wm.get(this).encoder.encoding;
+    }
+  }
+
+    return new  StreamingTextResponse(stream.pipeThrough(new JSTextEncoderStream()))
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 })
   }

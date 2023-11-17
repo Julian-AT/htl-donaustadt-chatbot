@@ -8,15 +8,15 @@ import { ThemeToggle } from './theme-toggle'
 const exampleMessages = [
   {
     heading: 'Erzähle mir etwas über die HTL Donaustadt',
-    message: `Erzähle mir etwas über die HTL Donaustadt`
+    message: 'Erzähle mir so viel du weißt über die HTL Donaustadt'
   },
   {
     heading: 'Kontaktinformationen der HTL Donaustadt',
-    message: 'Nenne mir die Kontaktinformationen der HTL Donaustadt'
+    message: 'Wie kann ich die HTL Donaustadt kontaktieren?'
   },
   {
-    heading: 'Wie kann ich mich an der HTL Donaustadt anmelden?',
-    message: 'Wie kann ich mich an der HTL Donaustadt anmelden?'
+    heading: 'Einzigartige/Nennenswerte Projekte der HTL Donaustadt',
+    message: 'Nenne mir einzigartige Projekte der HTL Donaustadt'
   }
 ]
 

@@ -1,15 +1,12 @@
-import { Message as VercelChatMessage, StreamingTextResponse, OpenAIStream } from 'ai'
+import { Message as VercelChatMessage, StreamingTextResponse } from 'ai'
 import { NextResponse } from 'next/server'
 import { PineconeStore } from 'langchain/vectorstores/pinecone'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { RunnableSequence } from 'langchain/schema/runnable'
-import {
-  PromptTemplate,
-} from 'langchain/prompts'
+import { PromptTemplate } from 'langchain/prompts'
 import { StringOutputParser } from 'langchain/schema/output_parser'
 import { Pinecone } from '@pinecone-database/pinecone'
-import { Readable, Transform } from 'stream'
 
 export const runtime = 'edge'
 
@@ -22,14 +19,15 @@ if (!process.env.PINECONE_ENVIRONMENT || !process.env.PINECONE_API_KEY) {
 }
 
 const TEMPLATE = `Du bist ein hilfreicher Chatbot der Fragen über die HTL Donaustadt aus sicht der Schule beantwortet.
-Du bekommst eine Wissenbasis über die Schule und kannst Fragen beantworten.
+Du bekommst eine Wissenbasis über die Schule und kannst Fragen beantworten. Wenn du etwas nicht weißt, sag einfach, dass du es nicht weißt.
 
 Du musst folgende Regeln beachten beim beanworten der Fragen:
   - Wenn du die Antwort nicht weißt, sag, dass du es nicht weißt und erfinde keine zusätzlichen Informationen.
   - Gib möglichst viele Informationen aus dem Kontext wieder. 
-  - Gib die Quelle für die Antwort(en) an, wenn du sie kennst.
-  - Sei immer freundlich und duze den Benutzer. Schreibe aus der Sicht der Schule. zb. Wir sind eine höhere technische Lehranstalt.
+  - Sei immer freundlich und duze den Benutzer.
   - Benutze das Markdown Format und gliedere deine Antwort in Absätze mit Überschriften.
+  - Führe alle Quellen, die du für deine Antwort genutzt hast, getrennt am Ende der Antwort an. zb. [Quelle](https://www.htl-donaustadt.at/home)
+  - Wenn du die Frage basierend auf dem Kontext nicht lösen kannst, sag, dass du es nicht weißt und gib dem Benutzer die Möglichkeit, die Frage umzuformulieren. Gib trotzdem potentielle Quellen an, um die Frage zu beantworten.
 
 --------------------------------------------------
 KONTEXT:
@@ -41,7 +39,10 @@ CHATVERLAUF:
 FRAGE:
 {question}
 --------------------------------------------------
-ANTWORT:`
+
+
+Wenn du die Frage basierend auf dem Kontext nicht lösen kannst, sag, dass du es nicht weißt und gib dem Benutzer die Möglichkeit, die Frage umzuformulieren. Gib trotzdem potentielle Quellen an, um die Frage zu beantworten.
+`
 
 export async function POST(req: Request) {
   try {
@@ -49,7 +50,7 @@ export async function POST(req: Request) {
     const json = await req.json()
 
     /* Destructure messages from body */
-    const { messages, previewToken } = json
+    const { messages } = json
 
     /* Format messages */
     const formattedPreviousMessages = messages.slice(0, -1).map(formatMessage)
@@ -58,7 +59,7 @@ export async function POST(req: Request) {
     const currentMessageContent = messages[messages.length - 1].content
 
     const model = new ChatOpenAI({
-      temperature: 0.8,
+      temperature: 0.69,
       modelName: 'gpt-3.5-turbo',
       streaming: true,
       maxTokens: 3000
@@ -85,7 +86,7 @@ export async function POST(req: Request) {
       }
     )
 
-    const vectorStoreRetriever = vectorStore.asRetriever(8)
+    const vectorStoreRetriever = vectorStore.asRetriever(3)
 
     const chain = RunnableSequence.from([
       {
@@ -100,10 +101,13 @@ export async function POST(req: Request) {
           )
           const serialized = relevantDocs
             .map(
-              doc =>
-                `TEXT: ${doc.pageContent}\n-------------------\nSOURCE: ${doc.metadata.source}\n\n`
+              (doc, index) =>
+                `${index + 1}. CONTEXT: ${doc.pageContent}\nSOURCE: ${
+                  doc.metadata.source
+                }\n`
             )
             .join('\n\n')
+          console.log(serialized)
           return serialized
         }
       },
@@ -119,26 +123,28 @@ export async function POST(req: Request) {
 
     const encoder = new TextEncoder()
     const tes = {
-      start() {
-      },
+      start() {},
       transform(chunk: string, controller: any) {
-        controller.enqueue(encoder.encode(chunk));
-      },
-    };
-
-    let _jstes_wm = new WeakMap(); /* info holder */
-  class JSTextEncoderStream extends TransformStream {
-    constructor() {
-      let t = { ...tes };
-      super(t);
-      _jstes_wm.set(this, t);
+        controller.enqueue(encoder.encode(chunk))
+      }
     }
-    get encoding() {
-      return _jstes_wm.get(this).encoder.encoding;
-    }
-  }
 
-    return new  StreamingTextResponse(stream.pipeThrough(new JSTextEncoderStream()))
+    /* Create a transform stream that encodes the text to unit8 */
+    let __info_holder = new WeakMap() /* info holder */
+    class EdgeRuntimeTransformer extends TransformStream {
+      constructor() {
+        let t = { ...tes }
+        super(t)
+        __info_holder.set(this, t)
+      }
+      get encoding() {
+        return __info_holder.get(this).encoder.encoding
+      }
+    }
+
+    return new StreamingTextResponse(
+      stream.pipeThrough(new EdgeRuntimeTransformer())
+    )
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 })
   }

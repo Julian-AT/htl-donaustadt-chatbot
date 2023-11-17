@@ -26,7 +26,8 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         id
       },
       onResponse(response) {
-        if (response.status === 401) {
+        console.log(response)
+        if (response.status >= 400) {
           toast.error(response.statusText)
         }
       },

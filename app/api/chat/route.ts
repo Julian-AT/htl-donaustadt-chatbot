@@ -41,6 +41,7 @@ FRAGE:
 --------------------------------------------------
 
 
+Antworte in der Sprache, die der User verwendet hat.
 Wenn du die Frage basierend auf dem Kontext nicht lösen kannst, sag, dass du es nicht weißt und gib dem Benutzer die Möglichkeit, die Frage umzuformulieren. Gib trotzdem potentielle Quellen an, um die Frage zu beantworten.
 `
 
@@ -107,13 +108,14 @@ export async function POST(req: Request) {
                 }\n`
             )
             .join('\n\n')
-          console.log(serialized)
-          return serialized
+            // limit the max length of the context to 2500 chars to avoid openai api errors
+          console.log(serialized.slice(0, 2500))
+          return serialized.slice(0, 2500 )
         }
       },
       PromptTemplate.fromTemplate(TEMPLATE),
       model,
-      new StringOutputParser()
+      new StringOutputParser()          
     ])
 
     const stream = await chain.stream({

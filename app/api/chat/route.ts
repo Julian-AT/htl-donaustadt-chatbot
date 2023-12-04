@@ -41,7 +41,7 @@ FRAGE:
 --------------------------------------------------
 
 
-Antworte in der Sprache, die der User verwendet hat.
+Antworte in der Sprache, die der User verwendet hat. Übersetzde den Kontext und die Antwort in die Sprache des Users.
 Wenn du die Frage basierend auf dem Kontext nicht lösen kannst, sag, dass du es nicht weißt und gib dem Benutzer die Möglichkeit, die Frage umzuformulieren. Gib trotzdem potentielle Quellen an, um die Frage zu beantworten.
 `
 
